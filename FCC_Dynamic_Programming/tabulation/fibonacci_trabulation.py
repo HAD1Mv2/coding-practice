@@ -1,6 +1,6 @@
 import time
 
-def normal_fib(n):
+def normal_fib(n:int) -> int:
 
     if n == 0:
         result = 0
@@ -10,7 +10,7 @@ def normal_fib(n):
         result = normal_fib(n-1)+normal_fib(n-2)
     return result
 
-def tab_fib(n):
+def tab_fib(n: int) -> int:
 
     array = [0 for i in range(n+1)]
     array[1] = 1

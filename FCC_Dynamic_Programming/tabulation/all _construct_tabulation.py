@@ -1,13 +1,15 @@
 import time
 import re
 import copy
+from typing import Any, Callable
 
-def print_all_combination(combinations):
+
+def print_all_combination(combinations: list[list[str]]):
 
     for comb in combinations:
         print(comb)
 
-def regular_all_construct(target_string, word_bank):
+def regular_all_construct(target_string: str, word_bank: list[str]) -> list[list[str]]:
 
     if target_string =='':
         return [[]]
@@ -26,9 +28,9 @@ def regular_all_construct(target_string, word_bank):
     return all_combs
 
 
-def tab_all_construct(target_string, word_bank):
+def tab_all_construct(target_string: str, word_bank: list[str]) -> list[list[str]]:
 
-    table = [[] for i in range(len(target_string)+1)]
+    table: list[list] = [[] for i in range(len(target_string)+1)]
     table[0] = [[]]
 
     for i in range(len(table)):
@@ -42,7 +44,7 @@ def tab_all_construct(target_string, word_bank):
 
     return table[-1]
 
-def eval_func_runtime(func_, inputs):
+def eval_func_runtime(func_:Callable[..., Any], inputs: Any):
 
     start = time.perf_counter()
     result = func_(*inputs)

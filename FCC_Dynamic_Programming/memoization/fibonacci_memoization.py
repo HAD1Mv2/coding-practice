@@ -1,6 +1,6 @@
 import time
 
-def normal_fib(n):
+def normal_fib(n: int) -> int:
 
     if n == 0:
         result = 0
@@ -11,7 +11,7 @@ def normal_fib(n):
     return result
 
 
-def dynamic_fib(n, memo = {}):
+def dynamic_fib(n: int, memo: dict = {}) -> int:
 
     if n in memo.keys():
         result = memo[n]

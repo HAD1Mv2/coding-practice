@@ -1,7 +1,8 @@
 import time
 import re
+from typing import Any, Callable
 
-def regular_count_construct(target_string, word_bank):
+def regular_count_construct(target_string: str, word_bank: list[str]) -> int:
 
     if target_string =='':
         return 1
@@ -16,7 +17,7 @@ def regular_count_construct(target_string, word_bank):
     
     return num
 
-def tab_count_construct(target_string, word_bank):
+def tab_count_construct(target_string: str, word_bank: list[str]) -> int:
 
     table = [0 for i in range(len(target_string)+1)]
     table[0] = 1
@@ -29,7 +30,7 @@ def tab_count_construct(target_string, word_bank):
 
     return table[-1]
 
-def eval_func_runtime(func_, inputs):
+def eval_func_runtime(func_: Callable[..., Any], inputs: Any):
 
     start = time.perf_counter()
     result = func_(*inputs)

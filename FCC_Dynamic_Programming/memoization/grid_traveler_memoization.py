@@ -1,6 +1,9 @@
 import time
+from typing import Any, Callable
 
-def normal_recursion_grid_traveler(m, n):
+
+
+def normal_recursion_grid_traveler(m: int, n: int) -> int:
     """
     function to count how many ways to travel from the top left corner to the bottom right corner
     in a m rows times n columns grid with only right and down movement, using normal recursion technique
@@ -14,7 +17,7 @@ def normal_recursion_grid_traveler(m, n):
 
     return num_ways
 
-def dynamic_grid_traveler_type_1(m, n, memo={}):
+def dynamic_grid_traveler_type_1(m: int, n:int, memo: dict={}) -> int:
     """
     function to count how many ways to travel from the top left corner to the bottom right corner
     in a m rows times n columns grid with only right and down movement, using dynamic programming technique
@@ -32,7 +35,7 @@ def dynamic_grid_traveler_type_1(m, n, memo={}):
     memo[(m,n)] = num_ways
     return num_ways
 
-def dynamic_grid_traveler_type_2(m, n, memo={}):
+def dynamic_grid_traveler_type_2(m: int, n: int, memo: dict={}) -> int:
     """
     function to count how many ways to travel from the top left corner to the bottom right corner
     in a m rows times n columns grid with only right and down movement, using dynamic programming technique
@@ -53,7 +56,7 @@ def dynamic_grid_traveler_type_2(m, n, memo={}):
     memo[(m,n)] = num_ways
     return num_ways
 
-def eval_func_runtime(func_, inputs):
+def eval_func_runtime(func_:Callable[..., Any], inputs: Any):
 
     start = time.perf_counter()
     result = func_(*inputs)

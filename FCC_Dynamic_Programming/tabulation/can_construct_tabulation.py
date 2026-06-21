@@ -1,7 +1,9 @@
 import time
 import re
+from typing import Any, Callable
 
-def regular_can_construct(target_string, word_bank):
+
+def regular_can_construct(target_string: str, word_bank: list[str]) -> bool:
 
     if target_string =='':
         return True
@@ -16,9 +18,9 @@ def regular_can_construct(target_string, word_bank):
     
     return False
 
-def tab_can_construct(target_string, word_bank):
+def tab_can_construct(target_string: str, word_bank: list[str]) -> bool:
 
-    table = [False for i in range(len(target_string)+1)]
+    table: list[bool] = [False for i in range(len(target_string)+1)]
     table[0] = True
 
     for i in range(len(table)):
@@ -29,7 +31,7 @@ def tab_can_construct(target_string, word_bank):
 
     return table[-1]
 
-def eval_func_runtime(func_, inputs):
+def eval_func_runtime(func_: Callable[..., Any], inputs: tuple[str, list[str]]):
 
     start = time.perf_counter()
     result = func_(*inputs)
@@ -44,10 +46,11 @@ if __name__=="__main__":
     # print(tab_can_construct("enterapotentpot", ["a", "p", "ent", "enter", "ot", "o", "t"])) # True
     # print(tab_can_construct("eeeeeeeeeeeeeeeeeeeeef", ["e", "ee", "eee", "eeee", "eeeee", "eeeeee"])) # False
 
-    inputs_set=[("abcdef", ["ab", "abc", "cd", "def", "abcd"]), 
-                ("eeeeeeeeeeeeeeeeeeeeef", ["e", "ee", "eee", "eeee", "eeeee", "eeeeee"])]
+    inputs_set: list[tuple[str, list[str]]]=[("abcdef", ["ab", "abc", "cd", "def", "abcd"]), 
+                                             ("eeeeeeeeeeeeeeeeeeeeef", ["e", "ee", "eee", "eeee", "eeeee", "eeeeee"])
+                                             ]
 
-    func_set = [regular_can_construct, tab_can_construct]
+    func_set: list[Callable[..., bool]] = [regular_can_construct, tab_can_construct]
 
     for inputs in inputs_set:
         for func_ in func_set:

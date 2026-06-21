@@ -1,6 +1,6 @@
 import time
 
-def normal_cansum(target_sum, numbers):
+def normal_cansum(target_sum: int, numbers: list[int]) -> bool:
 
     if target_sum == 0:
         return True
@@ -13,7 +13,7 @@ def normal_cansum(target_sum, numbers):
     
     return False
 
-def tab_cansum(target_sum, numbers):
+def tab_cansum(target_sum: int, numbers: list[int]) -> bool:
     
     table = [False for i in range(target_sum+1)]
     table[0]= True

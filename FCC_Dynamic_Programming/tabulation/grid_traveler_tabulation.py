@@ -1,6 +1,6 @@
 import time
 
-def normal_recursion_grid_traveler(m, n):
+def normal_recursion_grid_traveler(m: int, n: int) -> int:
     """
     function to count how many ways to travel from the top left corner to the bottom right corner
     in a m rows times n columns grid with only right and down movement, using normal recursion technique
@@ -14,7 +14,7 @@ def normal_recursion_grid_traveler(m, n):
 
     return num_ways
 
-def tab_grid_traveler(m,n):
+def tab_grid_traveler(m: int,n: int) -> int:
 
     array = [[0 for j in range(n+1)] for i in range(m+1)]
 

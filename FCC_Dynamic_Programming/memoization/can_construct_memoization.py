@@ -1,7 +1,8 @@
 import time
 import re
+from typing import Any, Callable
 
-def regular_can_construct(target_string, word_bank, *args):
+def regular_can_construct(target_string: str, word_bank: list[str], *args) -> bool:
 
     if target_string =='':
         return True
@@ -16,7 +17,7 @@ def regular_can_construct(target_string, word_bank, *args):
     
     return False
 
-def dynamic_can_construct(target_string, word_bank, memo):
+def dynamic_can_construct(target_string: str, word_bank: list[str], memo: dict) -> bool:
 
     if target_string in memo.keys():
         return memo[target_string]
@@ -36,7 +37,7 @@ def dynamic_can_construct(target_string, word_bank, memo):
     memo[target_string] = False
     return False
 
-def eval_func_runtime(func_, inputs):
+def eval_func_runtime(func_: Callable[..., Any], inputs: tuple[str, list[str], dict]):
 
     start = time.perf_counter()
     result = func_(*inputs)
@@ -46,10 +47,10 @@ def eval_func_runtime(func_, inputs):
 
 if __name__=="__main__":
 
-    inputs_set=[("abcdef", ["ab", "abc", "cd", "def", "abcd"], {}), 
+    inputs_set: list[tuple[str, list[str], dict]]=[("abcdef", ["ab", "abc", "cd", "def", "abcd"], {}), 
                 ("eeeeeeeeeeeeeeeeeeeeef", ["e", "ee", "eee", "eeee", "eeeee", "eeeeee"], {})]
 
-    func_set = [regular_can_construct, dynamic_can_construct]
+    func_set: list[Callable[..., bool]] = [regular_can_construct, dynamic_can_construct]
 
     for inputs in inputs_set:
         for func_ in func_set:

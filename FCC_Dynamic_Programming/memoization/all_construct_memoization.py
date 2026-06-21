@@ -1,13 +1,15 @@
 import time
 import re
 import copy
+from typing import Any, Callable
 
-def print_all_combination(combinations):
+
+def print_all_combination(combinations: list[list[str]]):
 
     for comb in combinations:
         print(comb)
 
-def regular_all_construct(target_string, word_bank, *args):
+def regular_all_construct(target_string: str, word_bank: list[str], *args) ->list[list[str]]:
 
     if target_string =='':
         return [[]]
@@ -25,7 +27,7 @@ def regular_all_construct(target_string, word_bank, *args):
 
     return all_combs
 
-def dynamic_all_construct(target_string, word_bank, memo):
+def dynamic_all_construct(target_string: str, word_bank: list[str], memo:dict) -> list[list[str]]:
 
     if target_string in memo.keys():
         return memo[target_string]
@@ -48,7 +50,7 @@ def dynamic_all_construct(target_string, word_bank, memo):
     return all_combs
 
 
-def eval_func_runtime(func_, inputs):
+def eval_func_runtime(func_:Callable[..., Any], inputs: Any):
 
     start = time.perf_counter()
     result = func_(*inputs)
@@ -65,15 +67,17 @@ def eval_func_runtime(func_, inputs):
 
 if __name__=="__main__":
 
-    inputs_set=[("abcdef", ["ab", "abc", "cd", "def", "abcd", "ef", "c"], {}), 
-                ("purple", ["purp", "p", "ur", "le", "purpl"], {}),
-                ("skateboard", ["bo", "rd", "ate", "t", "ska", "sk", "boar"], {}), 
-                ("aaaaaaaaaaaaaaaaaaaaaz", ["a", "aa", "aaa", "aaaa", "aaaaa"], {}),
-                ("abcdef", ["ab", "abc", "cd", "def", "abcd"], {}),
-                ("enterapotentpot", ["a", "p", "ent", "enter", "ot", "o", "t"], {}),
-                ("eeeeeeeeeeeeeeeeeeeeef", ["e", "ee", "eee", "eeee", "eeeee", "eeeeee"], {})]
-    
-    func_set = [regular_all_construct, dynamic_all_construct]
+    inputs_set: list[tuple[str, list[str], dict]] = [
+                                                        ("abcdef", ["ab", "abc", "cd", "def", "abcd", "ef", "c"], {}), 
+                                                        ("purple", ["purp", "p", "ur", "le", "purpl"], {}),
+                                                        ("skateboard", ["bo", "rd", "ate", "t", "ska", "sk", "boar"], {}), 
+                                                        ("aaaaaaaaaaaaaaaaaaaaaz", ["a", "aa", "aaa", "aaaa", "aaaaa"], {}),
+                                                        ("abcdef", ["ab", "abc", "cd", "def", "abcd"], {}),
+                                                        ("enterapotentpot", ["a", "p", "ent", "enter", "ot", "o", "t"], {}),
+                                                        ("eeeeeeeeeeeeeeeeeeeeef", ["e", "ee", "eee", "eeee", "eeeee", "eeeeee"], {})
+                                                    ]
+
+    func_set: list[Callable] = [regular_all_construct, dynamic_all_construct]
 
 
     for inputs in inputs_set:

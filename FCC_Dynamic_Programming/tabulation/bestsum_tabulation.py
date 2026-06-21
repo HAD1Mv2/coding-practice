@@ -1,14 +1,14 @@
 import time
 import copy
 
-def normal_bestsum(target_sum, numbers):
+def normal_bestsum(target_sum: int, numbers: list[int]) -> list[int] | None:
 
     if target_sum == 0:
         return []
     if target_sum < 0:
         return None
 
-    shortest_combination = None
+    shortest_combination: list[int] | None = None
 
     for num in numbers:
         result = normal_bestsum(target_sum-num, numbers)
@@ -19,9 +19,9 @@ def normal_bestsum(target_sum, numbers):
     
     return shortest_combination
 
-def tab_bestsum(target_sum, numbers):
+def tab_bestsum(target_sum: int, numbers: list[int]) -> list[int] | None:
 
-    arr = [None for i in range(target_sum+1)]
+    arr: list[list[int] | None]= [None for i in range(target_sum+1)]
     arr[0] = []
 
     for i in range(0, len(arr)-1):
@@ -42,8 +42,8 @@ def tab_bestsum(target_sum, numbers):
 
 if __name__=="__main__":
 
-    target_sum = 250
-    numbers = [7, 14]
+    target_sum: int = 250
+    numbers: list[int] = [7, 14]
 
     start = time.perf_counter()
     result = normal_bestsum(target_sum, numbers)

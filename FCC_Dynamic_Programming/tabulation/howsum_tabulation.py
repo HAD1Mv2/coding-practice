@@ -2,7 +2,7 @@ from re import A
 import time
 import copy
 
-def normal_howsum(target_sum, numbers):
+def normal_howsum(target_sum: int, numbers: list[int]) -> list[int] | None:
 
     if target_sum == 0:
         return []
@@ -17,9 +17,9 @@ def normal_howsum(target_sum, numbers):
     
     return None
 
-def tab_howsum(target_sum, numbers):
+def tab_howsum(target_sum: int, numbers: list[int]) -> list[int] | None:
 
-    arr = [None for i in range(target_sum+1)]
+    arr: list[list[int] | None] = [None for i in range(target_sum+1)]
     arr[0] = []
 
     for i in range(0, len(arr)-1):
@@ -27,7 +27,8 @@ def tab_howsum(target_sum, numbers):
             for n in numbers:
                 if i+n <= target_sum:
                     a = copy.deepcopy(arr[i])
-                    a.append(n)
+                    if isinstance(a, list[int]):
+                        a.append(n)
                     # print(a)
                     arr[i+n] = a
         # print(arr)
@@ -36,8 +37,9 @@ def tab_howsum(target_sum, numbers):
 
 if __name__=="__main__":
 
+    # change the function inputs here
     target_sum = 250
-    numbers = [7, 14]
+    numbers = [17, 3]
 
     start = time.perf_counter()
     result = normal_howsum(target_sum, numbers)

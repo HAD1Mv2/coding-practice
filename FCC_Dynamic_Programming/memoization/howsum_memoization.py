@@ -1,7 +1,9 @@
 import time
 import copy
+from typing import Any, Callable
 
-def normal_howsum(target_sum, numbers):
+
+def normal_howsum(target_sum: int, numbers: list[int]) -> list[int] | None:
 
     if target_sum == 0:
         return []
@@ -16,7 +18,7 @@ def normal_howsum(target_sum, numbers):
     
     return None
 
-def dynamic_howsum(target_sum, numbers, memo):
+def dynamic_howsum(target_sum: int, numbers: list[int], memo: dict) -> list[int] | None:
 
     if target_sum in memo.keys():
         return memo[target_sum]
@@ -35,7 +37,7 @@ def dynamic_howsum(target_sum, numbers, memo):
     memo[target_sum] = None
     return None    
 
-def eval_func_runtime(func_, args):
+def eval_func_runtime(func_:Callable[..., Any], args: Any):
 
     start = time.perf_counter()
     result = func_(*args)
