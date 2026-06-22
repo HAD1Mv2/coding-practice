@@ -2,6 +2,7 @@ from re import A
 import time
 import copy
 
+
 def normal_howsum(target_sum: int, numbers: list[int]) -> list[int] | None:
 
     if target_sum == 0:
@@ -27,8 +28,7 @@ def tab_howsum(target_sum: int, numbers: list[int]) -> list[int] | None:
             for n in numbers:
                 if i+n <= target_sum:
                     a = copy.deepcopy(arr[i])
-                    if isinstance(a, list[int]):
-                        a.append(n)
+                    a.append(n)
                     # print(a)
                     arr[i+n] = a
         # print(arr)
