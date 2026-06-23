@@ -5,11 +5,32 @@ from typing import Any, Callable
 
 
 def print_all_combination(combinations: list[list[str]]):
+    """Print all element of combinations
+
+    Parameters
+    ----------
+    combinations : list[list[str]]
+        List of list of string
+    """
 
     for comb in combinations:
         print(comb)
 
 def regular_all_construct(target_string: str, word_bank: list[str], *args) ->list[list[str]]:
+    """Get all of ways the target_string can be constructed from word_banks.
+    every element in word_bank can be used multiple times.
+
+    Parameters
+    ----------
+    target_string : str
+        String we want to reconstruct.
+    word_bank : list[str]
+        List of strings used to try reconstruct target_string. Every element in word_bank are unique.
+    Returns
+    -------
+    output : list[list[str]]
+        List containing all possible combination from word_bank to build the target_string.
+    """
 
     if target_string =='':
         return [[]]
@@ -28,7 +49,25 @@ def regular_all_construct(target_string: str, word_bank: list[str], *args) ->lis
     return all_combs
 
 def dynamic_all_construct(target_string: str, word_bank: list[str], memo:dict) -> list[list[str]]:
+    """Get all of ways the target_string can be constructed from word_banks.
+    every element in word_bank can be used multiple times.
+    This function use memoization technique.
 
+    Parameters
+    ----------
+    target_string : str
+        String we want to reconstruct.
+    word_bank : list[str]
+        List of strings used to try reconstruct target_string. Every element in word_bank are unique.
+    memo : dict
+        Placeholder for memo.
+
+    Returns
+    -------
+    output : list[list[str]]
+        List containing all possible combination from word_bank to build the target_string.
+    """
+    
     if target_string in memo.keys():
         return memo[target_string]
 
@@ -51,6 +90,15 @@ def dynamic_all_construct(target_string: str, word_bank: list[str], memo:dict) -
 
 
 def eval_func_runtime(func_:Callable[..., Any], inputs: Any):
+    """Measure running time of a function.
+
+    Parameters
+    ----------
+    func_ : Callable[..., Any]
+        A python function.
+    inputs : Any
+        Input of func_. Follow the structure of can_construct functions above.
+    """
 
     start = time.perf_counter()
     result = func_(*inputs)

@@ -1,6 +1,18 @@
 import time
 
 def normal_fib(n: int) -> int:
+    """Calculate fibonacci number using vanilla recursion function without memoization technique.
+
+    Parameters
+    ----------
+    n : int
+        Index of fibonacci number.
+
+    Returns
+    -------
+    output: int
+        The nth-fibonacci number. 
+    """
 
     if n == 0:
         result = 0
@@ -12,6 +24,20 @@ def normal_fib(n: int) -> int:
 
 
 def dynamic_fib(n: int, memo: dict = {}) -> int:
+    """Calculate fibonacci number using recursion function with memoization technique.
+
+    Parameters
+    ----------
+    n : int
+        Index of fibonacci number.
+    memo : dict, optional
+        Placeholder for the memo, by default {}.
+
+    Returns
+    -------
+    int
+        The nth-fibonacci number. 
+    """
 
     if n in memo.keys():
         result = memo[n]

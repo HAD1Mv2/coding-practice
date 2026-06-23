@@ -1,6 +1,18 @@
 import time
 
 def normal_fib(n:int) -> int:
+    """Calculate fibonacci number using vanilla recursion function without memoization technique.
+
+    Parameters
+    ----------
+    n : int
+        Index of fibonacci number.
+
+    Returns
+    -------
+    output: int
+        The nth-fibonacci number. 
+    """
 
     if n == 0:
         result = 0
@@ -11,6 +23,18 @@ def normal_fib(n:int) -> int:
     return result
 
 def tab_fib(n: int) -> int:
+    """Calculate fibonacci number using tabulation technique.
+
+    Parameters
+    ----------
+    n : int
+        Index of fibonacci number.
+
+    Returns
+    -------
+    int
+        The nth-fibonacci number. 
+    """
 
     array = [0 for i in range(n+1)]
     array[1] = 1

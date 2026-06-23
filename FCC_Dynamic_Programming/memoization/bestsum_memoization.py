@@ -3,6 +3,21 @@ import copy
 from typing import Any, Callable
 
 def normal_bestsum(target_sum: int, numbers: list[int], *args) -> list[int] | None:
+    """Check whether target_sum is a summation of numbers, 
+    return the best solution (shortest solution), an element of numbers can be used multiple times.
+
+    Parameters
+    ----------
+    target_sum : int
+        Target number.
+    numbers : list[int]
+        List of number used in summation operation to get target_sum.
+
+    Returns
+    -------
+    output : list[int] | None
+        The shortest solution or None of there isn't any.
+    """
 
     if target_sum == 0:
         return []
@@ -21,6 +36,24 @@ def normal_bestsum(target_sum: int, numbers: list[int], *args) -> list[int] | No
     return shortest_combination
 
 def dynamic_bestsum(target_sum: int, numbers: list[int], memo:dict) -> list[int] | None:
+    """Check whether target_sum is a summation of numbers, 
+    return the best solution (shortest solution), an element of numbers can be used multiple times.
+    The function use memoization technique.
+
+    Parameters
+    ----------
+    target_sum : int
+        Target number.
+    numbers : list[int]
+        List of number used in summation operation to get target_sum.
+    memo : dict
+        Placeholder for memo.
+
+    Returns
+    -------
+    output : list[int] | None
+        The shortest solution or None of there isn't any.
+    """
 
     if target_sum in memo.keys():
         return memo[target_sum]
@@ -45,6 +78,15 @@ def dynamic_bestsum(target_sum: int, numbers: list[int], memo:dict) -> list[int]
 
 
 def eval_func_runtime(func_: Callable[..., Any], inputs: Any):
+    """Measure running time of a function.
+
+    Parameters
+    ----------
+    func_ : Callable[..., Any]
+        A python function.
+    inputs : Any
+        Inputs of func_, must follow the input structure func_.
+    """
 
     start = time.perf_counter()
     result = func_(*inputs)

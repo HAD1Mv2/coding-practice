@@ -4,6 +4,21 @@ import copy
 
 
 def normal_howsum(target_sum: int, numbers: list[int]) -> list[int] | None:
+    """Check whether target_sum is a summation of numbers and return the solution, an element of numbers can be used multiple times.
+
+
+    Parameters
+    ----------
+    target_sum : int
+        Target number.
+    numbers : list[int]
+        List of number used in summation operation to get target_sum.
+
+    Returns
+    -------
+    list[int] | None
+        The solution in the form of numbers combination, return None if there isn't any.
+    """
 
     if target_sum == 0:
         return []
@@ -19,6 +34,21 @@ def normal_howsum(target_sum: int, numbers: list[int]) -> list[int] | None:
     return None
 
 def tab_howsum(target_sum: int, numbers: list[int]) -> list[int] | None:
+    """Check whether target_sum is a summation of numbers and return the solution, an element of numbers can be used multiple times.
+    This function use tabulation technique.
+
+    Parameters
+    ----------
+    target_sum : int
+        Target number.
+    numbers : list[int]
+        List of number used in summation operation to get target_sum.
+
+    Returns
+    -------
+    list[int] | None
+        The solution in the form of numbers combination, return None if there isn't any solution.
+    """
 
     arr: list[list[int] | None] = [None for i in range(target_sum+1)]
     arr[0] = []

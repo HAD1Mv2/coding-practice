@@ -2,6 +2,21 @@ import time
 import copy
 
 def normal_bestsum(target_sum: int, numbers: list[int]) -> list[int] | None:
+    """Check whether target_sum is a summation of numbers, 
+    return the best solution (shortest solution), an element of numbers can be used multiple times.
+
+    Parameters
+    ----------
+    target_sum : int
+        Target number.
+    numbers : list[int]
+        List of number used in summation operation to get target_sum.
+
+    Returns
+    -------
+    output : list[int] | None
+        The shortest solution or None of there isn't any.
+    """
 
     if target_sum == 0:
         return []
@@ -20,6 +35,22 @@ def normal_bestsum(target_sum: int, numbers: list[int]) -> list[int] | None:
     return shortest_combination
 
 def tab_bestsum(target_sum: int, numbers: list[int]) -> list[int] | None:
+    """Check whether target_sum is a summation of numbers, 
+    return the best solution (shortest solution), an element of numbers can be used multiple times.
+    The function use tabulation technique.
+
+    Parameters
+    ----------
+    target_sum : int
+        Target number.
+    numbers : list[int]
+        List of number used in summation operation to get target_sum.
+
+    Returns
+    -------
+    output : list[int] | None
+        The shortest solution or None of there isn't any.
+    """
 
     arr: list[list[int] | None]= [None for i in range(target_sum+1)]
     arr[0] = []

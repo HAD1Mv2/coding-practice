@@ -4,6 +4,21 @@ from typing import Any, Callable
 
 
 def normal_howsum(target_sum: int, numbers: list[int]) -> list[int] | None:
+    """Check whether target_sum is a summation of numbers and return the solution, an element of numbers can be used multiple times.
+
+
+    Parameters
+    ----------
+    target_sum : int
+        Target number.
+    numbers : list[int]
+        List of number used in summation operation to get target_sum.
+
+    Returns
+    -------
+    list[int] | None
+        The solution in the form of numbers combination, return None if there isn't any.
+    """
 
     if target_sum == 0:
         return []
@@ -19,6 +34,23 @@ def normal_howsum(target_sum: int, numbers: list[int]) -> list[int] | None:
     return None
 
 def dynamic_howsum(target_sum: int, numbers: list[int], memo: dict) -> list[int] | None:
+    """Check whether target_sum is a summation of numbers and return the solution, an element of numbers can be used multiple times.
+    This function use memoization technique.
+
+    Parameters
+    ----------
+    target_sum : int
+        Target number.
+    numbers : list[int]
+        List of number used in summation operation to get target_sum.
+    memo : dict
+        A placeholder for memo.
+
+    Returns
+    -------
+    list[int] | None
+        The solution in the form of numbers combination, return None if there isn't any solution.
+    """
 
     if target_sum in memo.keys():
         return memo[target_sum]
@@ -38,6 +70,15 @@ def dynamic_howsum(target_sum: int, numbers: list[int], memo: dict) -> list[int]
     return None    
 
 def eval_func_runtime(func_:Callable[..., Any], args: Any):
+    """Measure running time of a function.
+
+    Parameters
+    ----------
+    func_ : Callable[..., Any]
+        A python function.
+    args : Any
+        Inputs of func_, must follow the input structure func_.
+    """
 
     start = time.perf_counter()
     result = func_(*args)

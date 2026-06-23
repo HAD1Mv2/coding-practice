@@ -1,6 +1,20 @@
 import time
 
 def normal_cansum(target_sum: int, numbers: list[int]) -> bool:
+    """Check whether target_sum is a summation of numbers, an element of numbers can be used multiple times.
+
+    Parameters
+    ----------
+    target_sum : int
+        Target number.
+    numbers : list[int]
+        List of number used in summation operation to get target_sum.
+
+    Returns
+    -------
+    output : bool
+        True or False whether the solution exist.
+    """
 
     if target_sum == 0:
         return True
@@ -14,7 +28,22 @@ def normal_cansum(target_sum: int, numbers: list[int]) -> bool:
     return False
 
 def tab_cansum(target_sum: int, numbers: list[int]) -> bool:
-    
+    """Check whether target_sum is a summation of numbers, an element of numbers can be used multiple times.
+    The function use tabulation technique.
+
+    Parameters
+    ----------
+    target_sum : int
+        Target number.
+    numbers : list[int]
+        List of number used in summation operation to get target_sum.
+
+    Returns
+    -------
+    output : bool
+        True or False whether the solution exist.
+    """
+
     table = [False for i in range(target_sum+1)]
     table[0]= True
 

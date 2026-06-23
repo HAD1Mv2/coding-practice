@@ -3,6 +3,21 @@ import re
 from typing import Any, Callable
 
 def regular_count_construct(target_string: str, word_bank: list[str]) -> int:
+    """Count number of ways target_string can be constructed from word_banks.
+    every element in word_bank can be used multiple times.
+
+    Parameters
+    ----------
+    target_string : str
+        String we want to reconstruct.
+    word_bank : list[str]
+        List of strings used to try reconstruct target_string. Every element in word_bank are unique.
+
+    Returns
+    -------
+    out : int
+        Number of solutions. 
+    """
 
     if target_string =='':
         return 1
@@ -18,6 +33,21 @@ def regular_count_construct(target_string: str, word_bank: list[str]) -> int:
     return num
 
 def tab_count_construct(target_string: str, word_bank: list[str]) -> int:
+    """Count number of ways target_string can be constructed from word_banks.
+    every element in word_bank can be used multiple times. This function use tabulation technique.
+
+    Parameters
+    ----------
+    target_string : str
+        String we want to reconstruct.
+    word_bank : list[str]
+        List of strings used to try reconstruct target_string. Every element in word_bank are unique.
+
+    Returns
+    -------
+    out : int
+        Number of solutions. 
+    """
 
     table = [0 for i in range(len(target_string)+1)]
     table[0] = 1
@@ -31,7 +61,16 @@ def tab_count_construct(target_string: str, word_bank: list[str]) -> int:
     return table[-1]
 
 def eval_func_runtime(func_: Callable[..., Any], inputs: Any):
+    """Measure running time of a function.
 
+    Parameters
+    ----------
+    func_ : Callable[..., Any]
+        A python function.
+    inputs : Any
+        Input of func_. Follow the structure of can_construct functions above.
+    """
+    
     start = time.perf_counter()
     result = func_(*inputs)
     end = time.perf_counter()
