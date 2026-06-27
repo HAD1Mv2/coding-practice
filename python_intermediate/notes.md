@@ -1,18 +1,24 @@
 - [Python Intermediate](#python-intermediate)
   - [Parallel Programming using Python](#parallel-programming-using-python)
     - [Multithreading](#multithreading)
+      - [Queue](#queue)
+      - [Race condition](#race-condition)
+        - [How a Race Condition Happens](#how-a-race-condition-happens)
+        - [Critical Sections and Race Conditions](#critical-sections-and-race-conditions)
+        - [How to Prevent Race Conditions](#how-to-prevent-race-conditions)
+        - [Common Symptoms of Race Conditions](#common-symptoms-of-race-conditions)
+      - [GIL](#gil)
     - [Multiprocess](#multiprocess)
       - [`if __name__ == '__main__':` guard in Python multiprocessing](#if-__name__--__main__-guard-in-python-multiprocessing)
         - [The Core Problem: Process Spawning](#the-core-problem-process-spawning)
         - [What Happens Without the Guard](#what-happens-without-the-guard)
         - [How the Guard Fixes It](#how-the-guard-fixes-it)
         - [Visualizing the Execution Flow](#visualizing-the-execution-flow)
-    - [Race condition](#race-condition)
-      - [How a Race Condition Happens](#how-a-race-condition-happens)
-      - [Critical Sections and Race Conditions](#critical-sections-and-race-conditions)
-      - [How to Prevent Race Conditions](#how-to-prevent-race-conditions)
-      - [Common Symptoms of Race Conditions](#common-symptoms-of-race-conditions)
-    - [GIL](#gil)
+      - [Pool.apply()](#poolapply)
+        - [Key Characteristics](#key-characteristics)
+        - [Code Example](#code-example)
+        - [When to Use It](#when-to-use-it)
+        - [Alternatives for True Parallelism](#alternatives-for-true-parallelism)
   - [Context Manager](#context-manager)
     - [Why Use Context Managers](#why-use-context-managers)
     - [Common Built-In Examples](#common-built-in-examples)
@@ -43,6 +49,70 @@ Cons:
 - Not interuptable/killable.
 - Careful with race condition.
 
+#### Queue
+
+Queue are linear data structure that follows FIFO (First In Frist Out) principle.
+
+Queue are excelent for thread safe and process safe data exchange and data processing in multithreaded and multiprocessing enviroment.
+
+#### Race condition
+
+A **race condition** occurs when two or more threads access shared data simultaneously, and the final outcome depends on the unpredictable timing or order of their execution. It happens when at least one thread modifies the data while another reads or writes it, leading to data corruption and bugs.
+
+##### How a Race Condition Happens
+
+Imagine two threads trying to increment a shared counter variable with a starting value of 5. The operation counter++ looks like one action, but the CPU actually executes it in three separate steps:
+
+   1. Read: The thread reads the current value from memory (e.g., 5).
+   2. Modify: The thread adds 1 to the value in its CPU register (e.g., 5 + 1 = 6).
+   3. Write: The thread writes the new value back to memory (e.g., 6). 
+   
+If the threads overlap, the following race condition occurs:
+
+| Thread 1 (T1)         |Thread 2 (T2)            |Shared Counter Value |
+|-----------------------|-------------------------|---------------------|
+|1. Reads counter (5).  |     .                   |          5          |
+|.                      | 2. Reads counter (5)    |          5          |
+|3. Increments to 6     | .                       |          5          |
+|4. Writes 6 to memory  | .                       |          6          |
+|.                      | 5. Increments to 6      |          6          |
+|.                      | 6. Writes 6 to memory   |          6          |
+
+The Result: The counter was incremented twice, but the final value is 6 instead of 7. One update was completely lost. 
+
+------------------------------
+##### Critical Sections and Race Conditions
+
+* Critical Section: The specific block of code that accesses the shared, mutable resource (like the counter increment code above).
+* Trigger: A race condition occurs when multiple threads execute a critical section at the same time without proper coordination. 
+
+------------------------------
+##### How to Prevent Race Conditions
+To stop race conditions, you must enforce mutual exclusion, ensuring only one thread can access the critical section at a time.  
+
+* Mutex / Locks: A thread locks the critical section before entering and unlocks it when finished. Other threads must wait until it is unlocked. 
+* Atomic Operations: Uses specialized hardware instructions (like Compare-And-Swap) to perform the read-modify-write action as a single, uninterrupted step. 
+* Thread-Safe Data Structures: Built-in language collections (like Java's ConcurrentHashMap or C++'s std::atomic) that handle synchronization automatically. 
+* Immutability: Designing data to be read-only so multiple threads can access it safely without locks. 
+
+------------------------------
+##### Common Symptoms of Race Conditions
+
+* Intermittent Bugs: Code works perfectly during small tests but fails randomly under heavy system load.
+* Heisenbugs: Hard-to-reproduce errors that mysteriously disappear when you attach a debugger or add logging statements (because logging alters the thread timing).
+* Inconsistent State: Database records or memory objects showing impossible or mismatched data combinations. 
+
+#### GIL
+
+GIL (Global Interpreter Lock)
+
+- A lock that allow only on thread running at a time
+- Needed in CPython because memory management is not thread safe
+-  How to Avoid GIL:
+   -  Use multiprocessing.
+   -  Use a different, free threaded python implementation (e.g. Jython, IronPython).
+   -  Use Python as a wrapper for third party libraries (C/C++) -> numpy, scipy.
+  
 
 ### Multiprocess
 
@@ -107,63 +177,41 @@ By wrapping your process-starting code in `if __name__ == '__main__':`, you ensu
          └── Skips launching code -> Safely executes assigned task
 ```
 
-### Race condition
+#### Pool.apply()
+In Python's multiprocessing module, `Pool.apply()` submits a single task to a worker process and blocks execution until that task is completely finished. 
+Because it blocks the main program, it runs tasks sequentially (one after the other), meaning it does not provide any actual parallelism. 
 
-A **race condition** occurs when two or more threads access shared data simultaneously, and the final outcome depends on the unpredictable timing or order of their execution. It happens when at least one thread modifies the data while another reads or writes it, leading to data corruption and bugs.
+##### Key Characteristics
 
-#### How a Race Condition Happens
+* Blocking: The main process stops and waits for the worker process to finish the task.
+* Single Argument: It accepts a function and its arguments, passing them to a single worker.
+* No Parallelism: Calling `Pool.apply()` in a loop runs tasks one by one, mimicking normal synchronous execution. 
 
-Imagine two threads trying to increment a shared counter variable with a starting value of 5. The operation counter++ looks like one action, but the CPU actually executes it in three separate steps:
+##### Code Example
 
-   1. Read: The thread reads the current value from memory (e.g., 5).
-   2. Modify: The thread adds 1 to the value in its CPU register (e.g., 5 + 1 = 6).
-   3. Write: The thread writes the new value back to memory (e.g., 6). 
-   
-If the threads overlap, the following race condition occurs:
+```python
+import multiprocessingimport time
+def worker_task(x):
+    print(f"Processing {x}")
+    time.sleep(1)
+    return x * 2
+if __name__ == "__main__":
+    with multiprocessing.Pool(processes=4) as pool:
+        # This will take 3 seconds total because apply() blocks
+        res1 = pool.apply(worker_task, args=(1,))
+        res2 = pool.apply(worker_task, args=(2,))
+        res3 = pool.apply(worker_task, args=(3,))
+        
+        print(f"Results: {res1}, {res2}, {res3}")
+```
 
-| Thread 1 (T1)         |Thread 2 (T2)            |Shared Counter Value |
-|-----------------------|-------------------------|---------------------|
-|1. Reads counter (5).  |     .                   |          5          |
-|.                      | 2. Reads counter (5)    |          5          |
-|3. Increments to 6     | .                       |          5          |
-|4. Writes 6 to memory  | .                       |          6          |
-|.                      | 5. Increments to 6      |          6          |
-|.                      | 6. Writes 6 to memory   |          6          |
+##### When to Use It
+You should rarely use `Pool.apply()`. It is only useful when you specifically need to offload a single, heavy CPU-bound task to a background process but cannot move forward with your main program until you get that specific result. 
 
-The Result: The counter was incremented twice, but the final value is 6 instead of 7. One update was completely lost. 
+##### Alternatives for True Parallelism
+* `Pool.apply_async()`: Non-blocking version of apply(). It submits the task and immediately lets the main program continue, returning a result object you can check later. 
+* `Pool.map()`: Parallel version of Python's built-in `map()`. It splits an iterable of inputs across all available worker processes to run them simultaneously. 
 
-------------------------------
-#### Critical Sections and Race Conditions
-
-* Critical Section: The specific block of code that accesses the shared, mutable resource (like the counter increment code above).
-* Trigger: A race condition occurs when multiple threads execute a critical section at the same time without proper coordination. 
-
-------------------------------
-#### How to Prevent Race Conditions
-To stop race conditions, you must enforce mutual exclusion, ensuring only one thread can access the critical section at a time.  
-
-* Mutex / Locks: A thread locks the critical section before entering and unlocks it when finished. Other threads must wait until it is unlocked. 
-* Atomic Operations: Uses specialized hardware instructions (like Compare-And-Swap) to perform the read-modify-write action as a single, uninterrupted step. 
-* Thread-Safe Data Structures: Built-in language collections (like Java's ConcurrentHashMap or C++'s std::atomic) that handle synchronization automatically. 
-* Immutability: Designing data to be read-only so multiple threads can access it safely without locks. 
-
-------------------------------
-#### Common Symptoms of Race Conditions
-
-* Intermittent Bugs: Code works perfectly during small tests but fails randomly under heavy system load.
-* Heisenbugs: Hard-to-reproduce errors that mysteriously disappear when you attach a debugger or add logging statements (because logging alters the thread timing).
-* Inconsistent State: Database records or memory objects showing impossible or mismatched data combinations. 
-
-### GIL
-
-GIL (Global Interpreter Lock)
-
-- A lock that allow only on thread running at a time
-- Needed in CPython because memory management is not thread safe
--  How to Avoid GIL:
-   -  Use multiprocessing.
-   -  Use a different, free threaded python implementation (e.g. Jython, IronPython).
-   -  Use Python as a wrapper for third party libraries (C/C++) -> numpy, scipy.
 
 
 ## Context Manager
