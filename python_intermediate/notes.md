@@ -8,6 +8,13 @@
         - [How to Prevent Race Conditions](#how-to-prevent-race-conditions)
         - [Common Symptoms of Race Conditions](#common-symptoms-of-race-conditions)
       - [GIL](#gil)
+      - [Semaphore](#semaphore)
+        - [Core Concepts](#core-concepts)
+        - [Code Example](#code-example)
+        - [Key Variations](#key-variations)
+          - [Visual Comparison](#visual-comparison)
+          - [Key Differences](#key-differences)
+          - [Code Demonstration](#code-demonstration)
     - [Multiprocess](#multiprocess)
       - [`if __name__ == '__main__':` guard in Python multiprocessing](#if-__name__--__main__-guard-in-python-multiprocessing)
         - [The Core Problem: Process Spawning](#the-core-problem-process-spawning)
@@ -16,7 +23,7 @@
         - [Visualizing the Execution Flow](#visualizing-the-execution-flow)
       - [Pool.apply()](#poolapply)
         - [Key Characteristics](#key-characteristics)
-        - [Code Example](#code-example)
+        - [Code Example](#code-example-1)
         - [When to Use It](#when-to-use-it)
         - [Alternatives for True Parallelism](#alternatives-for-true-parallelism)
   - [Context Manager](#context-manager)
@@ -113,6 +120,85 @@ GIL (Global Interpreter Lock)
    -  Use a different, free threaded python implementation (e.g. Jython, IronPython).
    -  Use Python as a wrapper for third party libraries (C/C++) -> numpy, scipy.
   
+#### Semaphore
+
+In Python, a `threading.Semaphore` is a synchronization primitive used to limit access to a shared resource by a specific number of concurrent threads. It manages an internal counter that decreases when a thread acquires it and increases when a thread releases it. 
+
+##### Core Concepts
+
+* Internal Counter: Initialized with a specific value.
+* `.acquire()`: Decrements the counter. If the counter is zero, it blocks the thread until another thread calls .`release()`.
+* `.release()`: Increments the counter. It wakes up one waiting thread if any are blocked. 
+
+##### Code Example
+The most robust way to use a semaphore is with a with statement, which ensures the semaphore is automatically released even if an error occurs. 
+
+```python
+import threadingimport timeimport random
+# Allow a maximum of 3 threads to access the resource simultaneouslymax_connections = 3pool_semaphore = threading.Semaphore(max_connections)
+def access_resource(thread_id):
+    print(f"Thread {thread_id} is waiting to connect.")
+    
+    # Using 'with' automatically handles acquire() and release()
+    with pool_semaphore:
+        print(f"⚡ Thread {thread_id} connected!")
+        # Simulate work
+        time.sleep(random.uniform(1, 2))
+        print(f"❌ Thread {thread_id} disconnected.")
+# Launch 7 threads to see the limit in actionthreads = []for i in range(1, 8):
+    t = threading.Thread(target=access_resource, args=(i,))
+    threads.append(t)
+    t.start()
+for t in threads:
+    t.join()
+```
+
+##### Key Variations
+
+* `threading.BoundedSemaphore(value)`: A safer version of `Semaphor`e. It raises a `ValueError` if you call `.release()` more times than the initial value, preventing coding bugs from accidentally increasing the allowed concurrency pool. 
+  
+* Non-blocking Acquisition: You can pass `blocking=False` to `.acquire()`. It will immediately return `True` if successful, or `False` if the resource is full, without making the thread wait. 
+
+The core difference between `Semaphore` and `BoundedSemaphore` is how they handle excessive `.release()` calls. 
+
+A standard Semaphore allows you to call `.release()` infinitely, raising the internal counter past its starting value. A `BoundedSemaphore` throws an error if the counter exceeds its initial limit. 
+
+###### Visual Comparison
+```
+Initial Value = 2
+
+Semaphore:
+  .acquire() -> Counter = 1
+  .release() -> Counter = 2
+  .release() -> Counter = 3  (Allowed! Max limit is now broken)
+
+BoundedSemaphore:
+  .acquire() -> Counter = 1
+  .release() -> Counter = 2
+  .release() -> ValueError!  (Blocked! Prevents accidental limit breaks)
+```
+
+###### Key Differences
+
+* Counter Limits: Semaphore has no upper bound. BoundedSemaphore enforces the starting value as the strict maximum limit.
+* Error Handling: Semaphore silently increments the counter on extra releases. BoundedSemaphore raises a ValueError exception.
+* Use Case: Use Semaphore for producer/consumer patterns where the pool size changes dynamically. Use BoundedSemaphore to protect fixed hardware limits like database connections.
+* Bug Detection: BoundedSemaphore catches programming bugs where a thread accidentally calls .release() twice or releases without acquiring first. [4, 5, 6, 7] 
+
+###### Code Demonstration
+
+```python
+import threading
+# 1. Standard Semaphoresem = threading.Semaphore(1)
+sem.acquire()  # Counter becomes 0
+sem.release()  # Counter becomes 1
+sem.release()  # Counter becomes 2 (No error, now 2 threads can enter!)
+# 2. Bounded Semaphoreb_sem = threading.BoundedSemaphore(1)
+b_sem.acquire()  # Counter becomes 0
+b_sem.release()  # Counter becomes 1try:
+    b_sem.release()  # Exceeds initial value of 1except ValueError as e:
+    print(f"Caught expected error: {e}")  # Raises "Semaphore released too many times"
+```
 
 ### Multiprocess
 
